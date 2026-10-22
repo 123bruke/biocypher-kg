@@ -2064,6 +2064,44 @@ def filter_dbsnp_snps(vcf_path, vcf_output_path, rsid_set):
     return kept
 
 
+def filter_eva_snps(vcf_path, vcf_output_path, gtf_output_path):
+    """EVA VCF (dmel only for now): keep variant rows whose position falls
+    inside a gene body from the sample's own already-filtered GTF — same
+    position-overlap pattern as filter_rna_central, but simpler (chrom+pos
+    only, no interval). dmel's chromosome names (2L/2R/3L/3R/4/X/MT) already
+    match between the EVA VCF and the GTF with no 'chr' prefix, so this
+    doesn't need _load_gene_regions_from_filtered_gtf's gencode-style
+    normalization.
+    """
+    gene_regions = defaultdict(list)
+    with open_maybe_gzip(gtf_output_path) as f:
+        for line in f:
+            if line.startswith("#"):
+                continue
+            parts = line.rstrip("\n").split("\t")
+            if len(parts) < 5 or parts[2] != "gene":
+                continue
+            gene_regions[parts[0]].append((int(parts[3]), int(parts[4])))
+
+    def overlaps_any_gene(chrom, pos):
+        return any(start <= pos <= end for start, end in gene_regions.get(chrom, ()))
+
+    kept = 0
+    vcf_output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open_maybe_gzip(vcf_path) as fin, open_maybe_gzip(vcf_output_path, "wt") as fout:
+        for line in fin:
+            if line.startswith("#"):
+                fout.write(line)
+                continue
+            parts = line.rstrip("\n").split("\t")
+            if len(parts) < 8 or not parts[1].isdigit():
+                continue
+            if overlaps_any_gene(parts[0], int(parts[1])):
+                fout.write(line)
+                kept += 1
+    return kept
+
+
 # ---------------------------------------------------------------------------
 # Phase 5: synthetic fallback
 # ---------------------------------------------------------------------------
@@ -2328,6 +2366,9 @@ def _generate_dmel_extension(species, input_dir, output_dir, id_sets, record, sr
 
     n = filter_afca(src("afca_annotation"), dst("afca_annotation"), dst("fbgn_fbtr_fbpp_expanded"), id_sets["gene"])
     record("afca_annotation", n, empty_ok_reason="no afca rows whose gene symbol resolves into genes in set")
+
+    n = filter_eva_snps(src("eva_vcf"), dst("eva_vcf"), dst("gtf"))
+    record("eva_snp", n, empty_ok_reason="no EVA variant rows overlap the closure's gene bodies")
 
 
 def _generate_phase2_shared(species, input_dir, output_dir, cfg, id_sets, record, src, dst):

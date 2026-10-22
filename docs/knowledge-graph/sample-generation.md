@@ -669,7 +669,77 @@ frozen machine with the networkx version).
 To test whether a specific edge type is connectivity-critical before
 pruning it (see above), add an `exclude_substr` parameter that skips any
 edge file whose path contains it during the union-find pass, then compare
-the closure-membership result with and without that source included.
+## Shared MotifDiff Adapter integration (Human + Drosophila)
+
+### Overview
+
+`biocypher_metta/adapters/motif_diff_adapter.py` consolidates the species-specific MotifDiff adapters into a unified, species-agnostic adapter. It reads a MotifDiff `.diff` matrix (where rows represent genomic variants and columns represent transcription factor binding motifs) and yields `tf_snp` edges (`snp to motif association` in schema, written as `alters_binding` in graph outputs).
+
+### Operating Modes
+
+1. **Human mode (`motif_map_path=None`)**:
+   - Parses human HOCOMOCO model identifiers (e.g. `ANDR_HUMAN.H11MO.0.A`).
+   - Resolves HGNC symbols to Ensembl Gene IDs (`ENSEMBL:<id>`) via `HGNCProcessor`.
+   - Formats variants as `DBSNP:<rs>`.
+   - Selects the best motif per gene based on HOCOMOCO confidence tier rank (`A > B > C > D`) and absolute score.
+   - Retains exact backward compatibility across all combinations of `write_properties` and `add_provenance`.
+
+2. **Drosophila / mapping-based mode (`motif_map_path` specified)**:
+   - Resolves motif column headers (e.g. `MA0010.1 br`, `MA0530.1 EcR::usp`) using a TSV mapping file (e.g. `jaspar/dmel_motif_map_v4.tsv`).
+   - Maps motifs to FlyBase gene IDs (e.g. `FBgn0000210`).
+   - Grouping: selects the motif column with the highest absolute MotifDiff score for each TF gene.
+   - Heterodimers: controlled by `heterodimer: "all"` (expands to both partner genes) or `"skip"` (omits heterodimer motifs).
+   - Formats variants as bare `RS<digits>` (`variant_prefix: ""`, `uppercase_variant: True`) and genes as bare `FBgn...` (`gene_prefix: ""`).
+   - Taxon ID: configured as `7227` (`taxon_id: 7227`, threshold: `0.001`).
+
+### Shared Schema Specification
+
+The `snp to motif association` edge schema is defined in `config/primer_schema_config.yaml`:
+- `input_label`: `tf_snp`
+- `output_label`: `alters_binding`
+- `source`: `snp`
+- `target`: `motif`
+- `properties`:
+  - `effect`: `gain` or `loss`
+  - `score`: float (MotifDiff score)
+  - `motif_id`: str (motif accession, e.g. `MA0010.2`)
+  - `taxon_id`: int (`9606` for human, `7227` for dmel)
+  - `source`: str (`primary_knowledge_source`)
+  - `source_url`: str (`source_web_page`)
+
+### Production Dataset Instructions (Bizon Server)
+
+The full Drosophila merged dataset is located on the Bizon storage server:
+`/mnt/hdd_1/biocypher-kg/input/dmel/motif_diff/_mono_probNorm_average.diff`
+
+To merge the 22 variant chunks:
+```bash
+cd /mnt/hdd_1/biocypher-kg/input/dmel/jaspar
+# 1. Verify all chunk headers match
+for f in chunks/v_*average.diff; do head -1 "$f" | md5sum; done | sort | uniq -c
+# Expected: exactly 1 line with count 22
+
+# 2. Concatenate into merged output
+mkdir -p ../motif_diff
+out=../motif_diff/_mono_probNorm_average.diff
+head -1 chunks/v_000_*average.diff > "$out"
+for f in chunks/v_*average.diff; do tail -n +2 "$f" >> "$out"; done
+
+# 3. Validate line count
+wc -l "$out"
+# Expected: 5,327,113 lines (1 header + 5,327,112 variants across 357 motif columns)
+```
+
+### Running and Validating
+
+- Run unit & integration tests:
+  ```bash
+  pytest test/test_motif_diff_adapter.py -v
+  ```
+- Build Drosophila sample graph:
+  ```bash
+  python create_knowledge_graph.py --species dmel --dataset sample --writer-type neo4j --no-checkpoint
+  ```
 
 ## Open / to revisit
 

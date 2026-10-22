@@ -1037,3 +1037,32 @@ transcript to transcript physical interaction:
     object_category: biolink:Transcript
     knowledge_level: knowledge_assertion
     agent_type: manual_agent
+
+activity by contact:
+  description: >-
+    An association between a variant in a regulatory region and a gene predicted
+    by the ABC model (Fulco et al. 2019)
+  is_a: regulatory association
+  mixins: [biolink:VariantToGeneAssociation]
+  biolink_predicate: biolink:affects
+  inherit_properties: true
+  represented_as: edge
+  input_label: activity_by_contact
+  source: snp
+  target: gene
+  kgx_properties:
+    subject_category: biolink:Snv
+    object_category: biolink:Gene
+    knowledge_level: knowledge_assertion
+    agent_type: manual_agent
+  properties:
+    score:
+      type: float
+      biolink: has_quantitative_value
+    biological_context:
+      type: str
+      biolink: has_biological_sequence
+    taxon_id:
+      type: int
+      biolink: taxon
+      range: biolink:OrganismTaxon

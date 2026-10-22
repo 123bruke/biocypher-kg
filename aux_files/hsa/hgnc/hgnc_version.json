@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-08-24T22:26:15.623401",
+  "timestamp": "2026-10-06T14:16:32.563593",
   "processor": "hgnc",
-  "entries": 248641,
+  "entries": 249620,
   "remote_metadata": {
     "https://www.genenames.org/cgi-bin/download/custom?col=gd_hgnc_id&col=gd_app_sym&col=gd_prev_sym&col=gd_aliases&col=gd_pub_ensembl_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit": {
       "url": "https://www.genenames.org/cgi-bin/download/custom?col=gd_hgnc_id&col=gd_app_sym&col=gd_prev_sym&col=gd_aliases&col=gd_pub_ensembl_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit",
       "last_modified": null,
       "etag": null,
       "content_length": null,
-      "checked_at": "2026-08-24T22:26:17.313103"
+      "checked_at": "2026-10-06T14:16:34.704167"
     }
   }
 }

@@ -19,7 +19,7 @@ biocommons-seqrepo==0.6.11
     #   hgvs
 biocypher==0.12.5
     # via biocypher-metta (pyproject.toml)
-biopython==1.86
+biopython==1.88
     # via biocypher-metta (pyproject.toml)
 bioutils==0.6.1
     # via
@@ -76,7 +76,7 @@ google-api-core==2.34.0
     #   biocypher-metta (pyproject.toml)
     #   google-cloud-core
     #   google-cloud-storage
-google-auth==2.42.1
+google-auth==2.59.0
     # via
     #   biocypher-metta (pyproject.toml)
     #   google-api-core
@@ -107,7 +107,7 @@ humanfriendly==10.0
     # via
     #   biocypher-metta (pyproject.toml)
     #   coloredlogs
-idna==3.11
+idna==3.20
     # via
     #   biocypher-metta (pyproject.toml)
     #   requests
@@ -130,7 +130,7 @@ jedi==0.19.2
     # via
     #   biocypher-metta (pyproject.toml)
     #   ipython
-liftover==1.4.1
+liftover==1.5.0
     # via biocypher-metta (pyproject.toml)
 markdown-it-py==4.0.0
     # via
@@ -184,7 +184,7 @@ parsley==1.3
     # via
     #   biocypher-metta (pyproject.toml)
     #   hgvs
-parso==0.8.5
+parso==0.8.7
     # via
     #   biocypher-metta (pyproject.toml)
     #   jedi
@@ -252,7 +252,7 @@ pyparsing==3.2.5
     # via
     #   biocypher-metta (pyproject.toml)
     #   rdflib
-pysam==0.23.3
+pysam==0.24.1
     # via
     #   biocypher-metta (pyproject.toml)
     #   biocommons-seqrepo
@@ -298,7 +298,7 @@ rsa==4.9.1
     # via
     #   biocypher-metta (pyproject.toml)
     #   google-auth
-setuptools==80.9.0
+setuptools==84.0.0
     # via biocypher-metta (pyproject.toml)
 shellingham==1.5.4
     # via
@@ -336,7 +336,7 @@ tomli==2.4.1
     #   biocypher-metta (pyproject.toml)
     #   coverage
     #   pytest
-tqdm==4.67.3
+tqdm==4.70.1
     # via
     #   biocypher-metta (pyproject.toml)
     #   biocommons-seqrepo
@@ -368,7 +368,7 @@ urllib3==2.6.3
     #   biocypher-metta (pyproject.toml)
     #   liftover
     #   requests
-wcwidth==0.2.14
+wcwidth==0.9.1
     # via
     #   biocypher-metta (pyproject.toml)
     #   prompt-toolkit

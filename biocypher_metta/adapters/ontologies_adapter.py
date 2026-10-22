@@ -12,6 +12,26 @@ from abc import ABC, abstractmethod
 from biocypher_metta.adapters import Adapter
 from xml.etree import ElementTree as ET
 
+
+def _atomic_write(path, write_fn):
+    """Write to `path` atomically: write via `write_fn(tmp_path)` to a sibling
+    temp file, then os.replace() into place. Several adapter blocks (often
+    dispatched to different worker processes) can share the same ontology
+    cache file; without this, a concurrent reader can observe a
+    partially-written file (direct open(path, 'wb').write(...) / onto.save(path)
+    are not atomic), producing confusing downstream parse errors ('unclosed
+    token', bogus base IRIs) that look unrelated to the real cause.
+    """
+    directory = os.path.dirname(path) or "."
+    tmp_path = os.path.join(directory, f".{os.path.basename(path)}.tmp.{os.getpid()}")
+    try:
+        write_fn(tmp_path)
+        os.replace(tmp_path, path)
+    finally:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+
 class OntologyAdapter(Adapter):
     HAS_PART = rdflib.term.URIRef('http://purl.obolibrary.org/obo/BFO_0000051')
     PART_OF = rdflib.term.URIRef('http://purl.obolibrary.org/obo/BFO_0000050')
@@ -283,11 +303,13 @@ class OntologyAdapter(Adapter):
                                     response = requests.get(ontology_url, timeout=120)
                                     response.raise_for_status()
                                     raw_bytes = response.content
-                                with open(cached_path, 'wb') as f:
-                                    f.write(raw_bytes)
+                                def _write_owl(tmp_path):
+                                    with open(tmp_path, 'wb') as f:
+                                        f.write(raw_bytes)
+                                _atomic_write(cached_path, _write_owl)
                             except Exception as cache_e:
                                 print(f"Warning: Could not cache ontology file: {cache_e}")
-                            
+
                             meta = {
                                 'date': dt.now().isoformat(),
                                 'url': ontology_url,
@@ -296,8 +318,10 @@ class OntologyAdapter(Adapter):
                                 'loaded_with_rdflib': True,  # Flag to indicate fallback was used
                                 'parsing_error': str(e)[:500]  # Store first 500 chars of error for reference
                             }
-                            with open(meta_path, 'w') as f:
-                                json.dump(meta, f)
+                            def _write_meta(tmp_path):
+                                with open(tmp_path, 'w') as f:
+                                    json.dump(meta, f)
+                            _atomic_write(meta_path, _write_meta)
                         
                         self.clear_cache()
                         
@@ -334,7 +358,9 @@ class OntologyAdapter(Adapter):
 
             if self.cache_dir:
                 print(f"Caching ontology to {cached_path}")
-                onto.save(cached_path)
+                def _write_owl_from_onto(tmp_path):
+                    onto.save(tmp_path, format="rdfxml")
+                _atomic_write(cached_path, _write_owl_from_onto)
 
                 meta = {
                     'date': dt.now().isoformat(),
@@ -342,8 +368,10 @@ class OntologyAdapter(Adapter):
                     'hash': self._calculate_file_hash(cached_path),
                     'version': self.version
                 }
-                with open(meta_path, 'w') as f:
-                    json.dump(meta, f)
+                def _write_meta(tmp_path):
+                    with open(tmp_path, 'w') as f:
+                        json.dump(meta, f)
+                _atomic_write(meta_path, _write_meta)
 
         self.clear_cache()
 

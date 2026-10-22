@@ -155,6 +155,10 @@
       "real_rows": 165,
       "synthetic": false
     },
+    "eva_snp": {
+      "real_rows": 21210,
+      "synthetic": false
+    },
     "bgee": {
       "real_rows": 151014,
       "synthetic": false

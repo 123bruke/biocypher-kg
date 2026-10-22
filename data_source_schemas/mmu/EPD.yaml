@@ -1,8 +1,8 @@
 name: EPD
-website: ''
+website: https://epd.expasy.org
 nodes:
   promoter:
-    url: ''
+    url: https://epd.expasy.org/
     input_label: promoter
     properties:
       chr: str
@@ -11,7 +11,7 @@ nodes:
       taxon_id: int
 relationships:
   promoter to gene association:
-    url: ''
+    url: https://epd.expasy.org/
     input_label: promoter_gene
     output_label: associated_with
     description: An association between a promoter and a gene

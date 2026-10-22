@@ -1243,33 +1243,58 @@ so_sequence_subclass_of:
   nodes: False
   edges: True
 
-mi_molecular_interactions_ontology:
+eva_snp:
   adapter:
-    module: biocypher_metta.adapters.molecular_interactions_ontology_adapter
-    cls: MolecularInteractionsOntologyAdapter
+    module: biocypher_metta.adapters.eva_adapter
+    cls: EVAAdapter
     args:
-      ontology: 'mi'
-      type: node
-      dry_run: False
-      add_description: False
-      cache_dir: ./ontology_dataset_cache
-  outdir: molecular_interactions
+      filepath: eva/7227_GCA_000001215.4_current_ids.vcf.gz
+      taxon_id: 7227
+      label: snp
+  outdir: eva/
   nodes: True
   edges: False
 
-mi_molecular_interactions_subclass_of:
+eva_snp_in_gene:
   adapter:
-    module: biocypher_metta.adapters.molecular_interactions_ontology_adapter
-    cls: MolecularInteractionsOntologyAdapter
+    module: biocypher_metta.adapters.eva_adapter
+    cls: EVAAdapter
     args:
-      ontology: 'mi'
-      label: mi_subclass_of
-      type: edge
-      dry_run: False
-      cache_dir: ./ontology_dataset_cache
-  outdir: molecular_interactions
+      filepath: eva/7227_GCA_000001215.4_current_ids.vcf.gz
+      gene_filepath: ensembl/Drosophila_melanogaster.BDGP6.54.63.gtf.gz
+      taxon_id: 7227
+      label: snp_in_gene
+  outdir: eva/
   nodes: False
   edges: True
+
+# mi_molecular_interactions_ontology:
+#   adapter:
+#     module: biocypher_metta.adapters.molecular_interactions_ontology_adapter
+#     cls: MolecularInteractionsOntologyAdapter
+#     args:
+#       ontology: 'mi'
+#       type: node
+#       dry_run: False
+#       add_description: False
+#       cache_dir: ./ontology_dataset_cache
+#   outdir: molecular_interactions
+#   nodes: True
+#   edges: False
+
+# mi_molecular_interactions_subclass_of:
+#   adapter:
+#     module: biocypher_metta.adapters.molecular_interactions_ontology_adapter
+#     cls: MolecularInteractionsOntologyAdapter
+#     args:
+#       ontology: 'mi'
+#       label: mi_subclass_of
+#       type: edge
+#       dry_run: False
+#       cache_dir: ./ontology_dataset_cache
+#   outdir: molecular_interactions
+#   nodes: False
+#   edges: True
 
 do_disease_ontology:
   adapter:
@@ -1431,3 +1456,33 @@ alliance_gene_disease_is_marker_for:
   outdir: disease
   nodes: False
   edges: True
+
+abc_dmel_activity_by_contact:
+  adapter:
+    module: biocypher_metta.adapters.dmel.abc_dmel_adapter
+    cls: ABCDmelAdapter
+    args:
+      filepath: /mnt/hdd_1/biocypher-kg/input/dmel/abc/abc_dmel_variants.csv.gz
+      label: activity_by_contact
+      taxon_id: 7227
+  outdir: abc
+  nodes: False
+  edges: True
+
+motif_diff_tf_snp:                  # snp -> motif (TF gene) edges, MotifDiff output merged into one file
+  adapter:
+    module: biocypher_metta.adapters.motif_diff_adapter
+    cls: MotifDiffAdapter
+    args:
+      filepath: motif_diff/_mono_probNorm_average.diff
+      motif_map_path: jaspar/dmel_motif_map_v4.tsv
+      label: tf_snp
+      taxon_id: 7227
+      threshold: 0.001
+      variant_prefix: ""            # snp ids are 'RS<digits>' in the dmel KG (no DBSNP: prefix)
+      uppercase_variant: true
+      gene_prefix: ""               # gene ids are bare 'FBgn...'
+  outdir: MotifDiff
+  nodes: False
+  edges: True
+

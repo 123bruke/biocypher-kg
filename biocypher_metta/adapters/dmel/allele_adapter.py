@@ -14,6 +14,12 @@ FBal0100372	Myc[P0]	FBgn0262656	Myc
 FBal0009407	kst[01318]	FBgn0004167	kst
 FBal0091321	Ecol\lacZ[kst-01318]	FBgn0014447	Ecol\lacZ
 FBal0091320	Ecol\lacZ[mam-04615]	FBgn0014447	Ecol\lacZ
+
+# Coordinate convention for 'snp' nodes: chado's featureloc.fmin is 0-based/
+# half-open, but EVAAdapter's 'snp' nodes use the VCF's 1-based POS for both
+# 'start' and 'end' (start == end, a single point). get_nodes() below converts
+# fmin -> fmin + 1 so snp nodes from this adapter and from EVAAdapter share the
+# same coordinate system for the same physical base.
 '''
 from biocypher_metta.adapters.dmel.flybase_tsv_reader import FlybasePrecomputedTable
 #from flybase_tsv_reader import FlybasePrecomputedTable
@@ -33,7 +39,13 @@ class AlleleAdapter(Adapter):
         self.snp_cache = self._load_snp_cache()
 
     def _load_snp_cache(self):
-        """Fetch all SNPs and their locations from FlyBase in one fast query."""
+        """Fetch all SNPs and their locations (including chromosome) from FlyBase in one fast query.
+
+        The chromosome (fs.uniquename, e.g. '2L', '2R', '3L', '3R', '4', 'X') is the
+        srcfeature a SNP's featureloc is anchored to — already in the same raw,
+        unprefixed arm-name format EVAAdapter uses for its 'chr' property, so no
+        further normalization is needed here.
+        """
         snp_cache = {}
         conn = None
         try:
@@ -46,13 +58,14 @@ class AlleleAdapter(Adapter):
             )
             with conn.cursor() as cursor:
                 cursor.execute("""
-                    SELECT f.uniquename, fl.fmin
+                    SELECT f.uniquename, fl.fmin, fs.uniquename AS chr
                     FROM feature f
                     LEFT JOIN featureloc fl ON f.feature_id = fl.feature_id
+                    LEFT JOIN feature fs ON fl.srcfeature_id = fs.feature_id
                     WHERE f.type_id=733 AND f.is_obsolete=FALSE AND f.is_analysis=FALSE AND f.organism_id=1
                 """)
-                for uniquename, fmin in cursor.fetchall():
-                    snp_cache[uniquename] = fmin
+                for uniquename, fmin, chrom in cursor.fetchall():
+                    snp_cache[uniquename] = (fmin, chrom)
         except Exception as e:
             print(f"Error connecting to or querying FlyBase: {e}")
         finally:
@@ -77,10 +90,15 @@ class AlleleAdapter(Adapter):
 
             if allele_symbol in self.snp_cache:
                 snp_props = props.copy()
-                fmin = self.snp_cache[allele_symbol]
+                fmin, chrom = self.snp_cache[allele_symbol]
                 if fmin is not None:
-                    snp_props['start'] = fmin
+                    # fmin is 0-based/half-open (chado); convert to the 1-based,
+                    # single-point convention EVAAdapter uses (start == end == pos)
+                    # so snp nodes from both adapters share one coordinate system.
+                    snp_props['start'] = fmin + 1
                     snp_props['end'] = fmin + 1
+                if chrom is not None:
+                    snp_props['chr'] = chrom
                 yield allele_id, 'snp', snp_props
             else:
                 yield allele_id, self.label, props      # here label is 'allele'

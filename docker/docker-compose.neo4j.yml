@@ -10,8 +10,8 @@ services:
     image: ${NEO4J_IMAGE:-neo4j:5.21}
     restart: always
     ports:
-      - "${NEO4J_HTTP_PORT:-7674}:7474"
-      - "${NEO4J_BOLT_PORT:-7887}:7687"
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7674}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7887}:7687"
 
     environment:
       NEO4J_AUTH: "${NEO4J_AUTH:-neo4j/neo4j}"

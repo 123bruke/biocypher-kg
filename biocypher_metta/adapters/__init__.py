@@ -23,7 +23,11 @@ class Adapter:
             'entrez_ensembl_cache_directory': 'aux_files/cel/entrez_ensembl',
             'ensembl_uniprot_cache_directory': 'aux_files/cel/ensembl_uniprot',
             'ensembl_uniprot_organism': 'CAEEL_6239',
-            'update_interval_hours': 168
+            'update_interval_hours': 168,
+            'eva_source_url': (
+                "https://ftp.ebi.ac.uk/pub/databases/eva/rs_releases/release_9"
+                "/by_species/caenorhabditis_elegans/WBcel235/"
+            ),
         },
         7227: {
             'category': 'Invertebrates',
@@ -36,7 +40,11 @@ class Adapter:
             'entrez_ensembl_cache_directory': 'aux_files/dmel/entrez_ensembl',
             'ensembl_uniprot_cache_directory': 'aux_files/dmel/ensembl_uniprot',
             'ensembl_uniprot_organism': 'DROME_7227',
-            'update_interval_hours': 4320
+            'update_interval_hours': 4320,
+            'eva_source_url': (
+                "https://ftp.ebi.ac.uk/pub/databases/eva/rs_releases/release_9"
+                "/by_species/drosophila_melanogaster/Release_6_plus_ISO1_MT/"
+            ),
         },
         9606: {
             'category': 'Mammalia',
@@ -62,7 +70,11 @@ class Adapter:
             'entrez_ensembl_cache_directory': 'aux_files/mmu/entrez_ensembl',
             'ensembl_uniprot_cache_directory': 'aux_files/mmu/ensembl_uniprot',
             'ensembl_uniprot_organism': 'MOUSE_10090',
-            'update_interval_hours': 168
+            'update_interval_hours': 168,
+            'eva_source_url': (
+                "https://ftp.ebi.ac.uk/pub/databases/eva/rs_releases/release_9"
+                "/by_species/mus_musculus/GRCm39/"
+            ),
         },
         10116: {
             'category': 'Mammalia',
@@ -75,7 +87,11 @@ class Adapter:
             'entrez_ensembl_cache_directory': 'aux_files/rno/entrez_ensembl',
             'ensembl_uniprot_cache_directory': 'aux_files/rno/ensembl_uniprot',
             'ensembl_uniprot_organism': 'RAT_10116',
-            'update_interval_hours': 168
+            'update_interval_hours': 168,
+            'eva_source_url': (
+                "https://ftp.ebi.ac.uk/pub/databases/eva/rs_releases/release_9"
+                "/by_species/rattus_norvegicus/GRCr8/"
+            ),
         },
         # Add more organisms as needed
     }

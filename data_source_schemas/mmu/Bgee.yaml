@@ -11,6 +11,7 @@ relationships:
     properties:
       p_value: float
       score: float
+      taxon_id: int
   gene expressed in developmental stage:
     url: https://www.bgee.org/download/gene-expression-calls?id=
     input_label: gene_expressed_in_developmental_stage
@@ -21,3 +22,4 @@ relationships:
     properties:
       p_value: float
       score: float
+      taxon_id: int

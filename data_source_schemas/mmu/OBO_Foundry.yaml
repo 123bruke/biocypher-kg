@@ -137,3 +137,9 @@ relationships:
     description: Cross-ontology relation linking a CL cell type to a BTO tissue term.
     source: cell type
     target: tissue
+  go gene:
+    url: http://www.obofoundry.org/
+    input_label: go_gene
+  go gene product:
+    url: http://www.obofoundry.org/
+    input_label: go_gene_product

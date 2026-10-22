@@ -56,7 +56,7 @@ biocypher_metta/
 │   │   ├── reactome_*.py (5 adapters)
 │   │   ├── bgee_adapter.py / coxpresdb_adapter.py
 │   │   ├── [ontology adapters: chebi, cell, cell_line, uberon, hsapdv, omim, brenda, efo, mi, seq, generic obo, gaf]
-│   │   ├── [regulatory: cCRE enhancer/promoter, EnhancerAtlas, TFBS, HOCOMOCO, TFLink, ENCODE RE2G, TADMap, EPD]
+│   │   ├── [regulatory: cCRE enhancer/promoter, EnhancerAtlas, TFBS, HOCOMOCO, TFLink, ENCODE RE2G, TADMap, EPD, MotifDiff]
 │   │   └── [cross-species: Alliance gene-disease, Alliance orthology, RNAcentral]
 │   │
 │   ├── hsa/                    # Human-specific adapters (24 files)
@@ -73,7 +73,7 @@ biocypher_metta/
 │   │   ├── catlas_ccre_adapter.py / catlas_ccre_cell_type_adapter.py / catlas_abc_score_adapter.py
 │   │   ├── roadmap_dhs_adapter.py / roadmap_h3_marks_adapter.py / roadmap_state_adapter.py
 │   │   ├── hpo_gene_disease_adapter.py / hpo_gene_phenotype_adapter.py / human_phenotype_ontology_adapter.py
-│   │   ├── peregrine_adapter.py / motif_diff_adapter.py
+│   │   ├── peregrine_adapter.py
 │   │   ├── dbsuper_adapter.py  # Super-enhancer database
 │   │   └── refseq_closest_gene_adapter.py
 │   │

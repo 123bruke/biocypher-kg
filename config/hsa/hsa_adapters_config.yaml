@@ -1342,7 +1342,7 @@ cl_cell_type_part_of_tissue:
 
 motif_diff_tf_snp:
   adapter:
-    module: biocypher_metta.adapters.hsa.motif_diff_adapter
+    module: biocypher_metta.adapters.motif_diff_adapter
     cls: MotifDiffAdapter
     args:
       filepath: motif_diff/_mono_probNorm_average.diff

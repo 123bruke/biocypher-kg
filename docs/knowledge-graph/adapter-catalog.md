@@ -104,7 +104,7 @@ See [CONTRIBUTING.md](https://github.com/rejuve-bio/biocypher-kg/blob/main/CONTR
 | **PolyPhen-2** | `hsa/polyphen2_adapter.PolyPhen2Adapter` | — | protein mutation effects | [genetics.bwh.harvard.edu](https://genetics.bwh.harvard.edu/pph2/) |
 | **GWAS Catalog** | `hsa/gwas_adapter.GWASAdapter` | — | `gene_disease` (via GWAS associations) | [ebi.ac.uk/gwas](https://www.ebi.ac.uk/gwas/) |
 | **TopLD** | `hsa/topld_adapter.TopLDAdapter` | — | LD blocks (4 populations: AFR, EAS, EUR, SAS) | [topld.genetics.unc.edu](http://topld.genetics.unc.edu/) |
-| **MotifDiff** | `hsa/motif_diff_adapter.MotifDiffAdapter` | — | motif difference scores | — |
+| **MotifDiff** | `motif_diff_adapter.MotifDiffAdapter` | — | `tf_snp` (motif difference scores) | [github.com/rezwanhosseini/MotifDiff](https://github.com/rezwanhosseini/MotifDiff) |
 | **PEREGRINE** | `hsa/peregrine_adapter.PeregrineAdapter` | — | long-range interactions | — |
 
 ### Disease and phenotype
@@ -184,6 +184,7 @@ All FlyBase adapters source data from [flybase.org](https://flybase.org/).
 | **TFLink** | `tflink_adapter.TFLinkAdapter` | Drosophila interactions |
 | **EPD** | `epd_adapter.EPDAdapter` | Drosophila promoters |
 | **Alliance** | `alliance_gene_disease_adapter`, `alliance_gene_orthology_adapter` | Multi-species |
+| **MotifDiff** | `motif_diff_adapter.MotifDiffAdapter` | SNP to TF gene binding differences (JASPAR motifs, taxon 7227) |
 
 ### Drosophila-specific ontologies
 
@@ -206,6 +207,7 @@ These sources are used for both `hsa` and `dmel` (and potentially other species)
 | **Gene Ontology** | GO terms and annotations via GAF files |
 | **STRING** | PPI and coexpression (species-specific protein links files) |
 | **UniProt** | Protein sequences and cross-references |
+| **MotifDiff** | SNP-to-transcription factor binding affinity differences (HOCOMOCO for human, JASPAR for Drosophila) |
 
 ---
 
@@ -219,7 +221,7 @@ These sources are used for both `hsa` and `dmel` (and potentially other species)
 | Pathways / reactions | Yes | Yes | - | - | - |
 | GO annotations | Yes | Yes | - | - | - |
 | Gene expression | Yes | Yes | - | - | - |
-| Regulatory elements | Yes | — | - | - | - |
+| Regulatory elements | Yes | Yes (MotifDiff) | - | - | - |
 | Genetic variants | Yes | Yes (alleles) | - | - | - |
 | Disease / phenotype | Yes | Yes | - | - | - |
 | Orthology / paralogy | Yes | Yes | - | - | - |

@@ -65,7 +65,7 @@ relationships:
   protein has_xref molecular_function:
     url: https://www.uniprot.org/
     input_label: protein_has_xref_molecular_function
-    output_label: has_molecular_function
+    output_label: has_xref
     source: protein
     target: molecular function
     properties:

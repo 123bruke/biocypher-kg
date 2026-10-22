@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-07-20T18:39:57.984494",
+  "timestamp": "2026-10-06T14:16:47.268011",
   "processor": "ensembl_uniprot",
-  "entries": 177167,
+  "entries": 177263,
   "remote_metadata": {
     "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/by_organism/MOUSE_10090_idmapping.dat.gz": {
       "url": "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/by_organism/MOUSE_10090_idmapping.dat.gz",
-      "last_modified": "Wed, 10 Jun 2026 20:00:00 GMT",
-      "etag": "\"ed9250-653ebb0451000\"",
-      "content_length": "15569488",
-      "checked_at": "2026-07-20T18:39:58.746608"
+      "last_modified": "Thu, 03 Sep 2026 18:00:00 GMT",
+      "etag": "\"ed11e2-65a97eba0a800\"",
+      "content_length": "15536610",
+      "checked_at": "2026-10-06T14:16:48.107592"
     }
   }
 }

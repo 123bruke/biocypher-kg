@@ -1,0 +1,14 @@
+name: ABC
+website: https://github.com/broadinstitute/ABC-Enhancer-Gene-Prediction
+relationships:
+  activity by contact:
+    url: https://github.com/broadinstitute/ABC-Enhancer-Gene-Prediction
+    input_label: activity_by_contact
+    description: An association between a variant in a regulatory region and a gene
+      predicted by the ABC model (Fulco et al. 2019)
+    source: snp
+    target: gene
+    properties:
+      biological_context: str
+      score: float
+      taxon_id: int

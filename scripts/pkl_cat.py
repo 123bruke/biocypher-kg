@@ -1,3 +1,4 @@
+import gzip
 import pickle
 import sys
 
@@ -8,8 +9,14 @@ if len(sys.argv) < 2:
 
 file_path = sys.argv[1]
 
+GZIP_MAGIC = b"\x1f\x8b"
+
 try:
     with open(file_path, 'rb') as f:
+        is_gzipped = f.read(2) == GZIP_MAGIC
+
+    opener = gzip.open if is_gzipped else open
+    with opener(file_path, 'rb') as f:
         data = pickle.load(f)
         print("File:", file_path)
         print("Object type:", type(data))

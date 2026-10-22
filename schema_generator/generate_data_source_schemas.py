@@ -455,10 +455,15 @@ class SchemaGenerator:
     def load_schema_config(schema_config_path: str, include_primer: bool = False) -> Dict:
         schema_config = {}
         if include_primer:
-            # config/<species>/<species>_schema_config.yaml -> config/primer_schema_config.yaml,
-            # resolved relative to schema_config_path (not the process cwd), so this works
-            # regardless of which repo checkout or working directory the caller runs from.
-            primer_path = Path(schema_config_path).resolve().parent.parent / 'primer_schema_config.yaml'
+            # Resolved relative to this module's own file location (not schema_config_path
+            # and not the process cwd), so this works regardless of which repo checkout or
+            # working directory the caller runs from. schema_config_path's own depth isn't a
+            # reliable anchor: create_knowledge_graph.py's --species mode always passes an
+            # already-primer-merged temp file sitting directly under config/ (one level deep),
+            # not the two-level-deep config/<species>/<species>_schema_config.yaml this used to
+            # assume via `.resolve().parent.parent` -- that previously resolved to the repo root
+            # instead of config/, raising FileNotFoundError for primer_schema_config.yaml.
+            primer_path = Path(__file__).resolve().parent.parent / 'config' / 'primer_schema_config.yaml'
             with open(primer_path) as f:
                 primer_config = load_yaml_with_includes(f) or {}
             schema_config.update(primer_config)
