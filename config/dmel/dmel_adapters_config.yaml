@@ -1362,6 +1362,7 @@ epd_promoter:
       label: promoter
       type: promoter
       taxon_id: 7227
+      assembly: dm6
   outdir: epd
   nodes: True
   edges: False
@@ -1376,6 +1377,7 @@ epd_promoter_regulates_gene:
       label: promoter_gene
       type: promoter_gene
       taxon_id: 7227
+      assembly: dm6
   outdir: epd
   nodes: False
   edges: True
@@ -1456,3 +1458,33 @@ alliance_gene_disease_is_marker_for:
   outdir: disease
   nodes: False
   edges: True
+
+abc_dmel_activity_by_contact:
+  adapter:
+    module: biocypher_metta.adapters.dmel.abc_dmel_adapter
+    cls: ABCDmelAdapter
+    args:
+      filepath: /mnt/hdd_1/biocypher-kg/input/dmel/abc/abc_dmel_variants.csv.gz
+      label: activity_by_contact
+      taxon_id: 7227
+  outdir: abc
+  nodes: False
+  edges: True
+
+motif_diff_tf_snp:                  # snp -> motif (TF gene) edges, MotifDiff output merged into one file
+  adapter:
+    module: biocypher_metta.adapters.motif_diff_adapter
+    cls: MotifDiffAdapter
+    args:
+      filepath: motif_diff/_mono_probNorm_average.diff
+      motif_map_path: jaspar/dmel_motif_map_v4.tsv
+      label: tf_snp
+      taxon_id: 7227
+      threshold: 0.001
+      variant_prefix: ""            # snp ids are 'RS<digits>' in the dmel KG (no DBSNP: prefix)
+      uppercase_variant: true
+      gene_prefix: ""               # gene ids are bare 'FBgn...'
+  outdir: MotifDiff
+  nodes: False
+  edges: True
+

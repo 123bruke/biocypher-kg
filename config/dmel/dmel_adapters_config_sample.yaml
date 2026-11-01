@@ -1063,6 +1063,7 @@ epd_promoter:
       label: promoter
       taxon_id: 7227
       hgnc_to_ensembl_map: ./aux_files/dmel/flybase_synonym_mapping.pkl
+      assembly: dm6
   outdir: epd
   nodes: True
   edges: False
@@ -1077,6 +1078,7 @@ epd_promoter_regulates_gene:
       taxon_id: 7227
       hgnc_to_ensembl_map: ./aux_files/dmel/flybase_synonym_mapping.pkl
       type: promoter to gene association
+      assembly: dm6
   outdir: epd
   nodes: False
   edges: True
@@ -1488,3 +1490,33 @@ reactome_positive_role_protein_to_reaction_or_pathway:
   outdir: reactome
   nodes: False
   edges: True
+
+abc_dmel_activity_by_contact:
+  adapter:
+    module: biocypher_metta.adapters.dmel.abc_dmel_adapter
+    cls: ABCDmelAdapter
+    args:
+      filepath: abc/abc_dmel_variants_sample.csv.gz
+      label: activity_by_contact
+      taxon_id: 7227
+  outdir: abc
+  nodes: False
+  edges: True
+
+motif_diff_tf_snp:                  # snp -> motif (TF gene) edges, MotifDiff output merged into one file
+  adapter:
+    module: biocypher_metta.adapters.motif_diff_adapter
+    cls: MotifDiffAdapter
+    args:
+      filepath: motif_diff/_mono_probNorm_average.diff
+      motif_map_path: jaspar/dmel_motif_map_v4.tsv
+      label: tf_snp
+      taxon_id: 7227
+      threshold: 0.001
+      variant_prefix: ""            # snp ids are 'RS<digits>' in the dmel KG (no DBSNP: prefix)
+      uppercase_variant: true
+      gene_prefix: ""               # gene ids are bare 'FBgn...'
+  outdir: MotifDiff
+  nodes: False
+  edges: True
+

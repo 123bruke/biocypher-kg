@@ -178,3 +178,53 @@ fca2:  # FlyCellAtlas2 -- not download-managed (static snapshot, see review_2026
     fca2_fbgn_mir_gene: {pattern: "fca2/fca2_fbgn_mir_gene_output.tsv.gz", stable_name: "fca2/fca2_fbgn_mir_gene_output.tsv.gz"}
     fca2_fbgn_mir_transcript: {pattern: "fca2/fca2_fbgn_mir_transcript_output.tsv.gz", stable_name: "fca2/fca2_fbgn_mir_transcript_output.tsv.gz"}
     fca2_fbgn_transcript_gene: {pattern: "fca2/fca2_fbgn_transcriptGene_output.tsv.gz", stable_name: "fca2/fca2_fbgn_transcriptGene_output.tsv.gz"}
+
+abc:
+  name: Activity-By-Contact (ABC)
+  description: Enhancer-gene predictions for D. melanogaster Kc167 cells using ABC model
+  source_url: https://github.com/broadinstitute/ABC-Enhancer-Gene-Prediction
+  version: "commit 92ac503 + abc_dmel.patch"
+  extract: false
+  local_files:
+    abc_dmel_variants: {pattern: "abc/abc_dmel_variants.csv.gz", stable_name: "abc/abc_dmel_variants.csv.gz"}
+
+abc_model:
+  name: ABC model (Broad Institute)
+  description: Enhancer-gene prediction method
+  version: "commit 92ac503 + abc_dmel.patch"
+  source_url: https://github.com/broadinstitute/ABC-Enhancer-Gene-Prediction
+
+kc167_dnase:
+  name: Kc167 DNase-seq
+  description: Chromatin accessibility / activity signal
+  version: "SRA SRR099153; study SRP005657"
+  sra_accession: SRR099153
+  study: SRP005657
+  source_url: https://www.ncbi.nlm.nih.gov/sra/SRR099153
+
+kc167_hic:
+  name: Kc167 Hi-C
+  description: Contact modeling (hic_gamma=1.2405) for dm6
+  version: "GEO GSE80701, genome dm6, hic_gamma=1.2405"
+  geo_accession: GSE80701
+  file: GSE80701_DpnII_HinfI_combo.hic
+  source_url: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE80701
+
+flybase_r6_69:
+  name: FlyBase r6.69
+  description: Gene TSSs and chromosome sizes
+  version: "Release r6.69"
+  source_url: https://flybase.org/
+
+encode_blacklist_v2:
+  name: ENCODE Blacklist v2 (Boyle Lab)
+  description: Excluded blacklisted regions for dm6
+  version: "commit 61a04d2c"
+  file: dm6-blacklist.v2.bed.gz
+  source_url: https://github.com/Boyle-Lab/Blacklist
+
+eva_dmel_variants:
+  name: European Variation Archive (EVA)
+  description: D. melanogaster variant set used in MotifDiff pipeline for variant IDs and positions
+  source: EVA
+  pipeline: MotifDiff

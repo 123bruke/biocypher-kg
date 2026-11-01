@@ -2,12 +2,16 @@ import csv
 import gzip
 import pickle
 from biocypher_metta.adapters import Adapter
-from biocypher_metta.processors import HGNCProcessor
+from biocypher_metta.processors.hgnc_processor import HGNCProcessor
 from biocypher_metta.processors.gene_symbol_ensembl_processor import (
     GeneSymbolEnsemblProcessor,
     GENE_SYMBOL_CONFIGS,
 )
-from biocypher._logger import logger
+try:
+    from biocypher._logger import logger
+except ImportError:
+    import logging
+    logger = logging.getLogger("biocypher")
 
 # Human data:
 # https://epd.expasy.org/ftp/epdnew/H_sapiens/
@@ -51,6 +55,7 @@ class EPDAdapter(Adapter):
         hgnc_processor=None,
         gene_symbol_processor=None,
         gene_symbol_cache_base_dir='aux_files',
+        assembly=None,
     ):
         """
         :param hgnc_to_ensembl_map:          DEPRECATED — legacy pickle path for non-human
@@ -60,6 +65,7 @@ class EPDAdapter(Adapter):
                                               GENE_SYMBOL_CONFIGS for supported species.
         :param gene_symbol_cache_base_dir:    Base dir for auto-created processor caches
                                               (e.g. 'aux_files' → 'aux_files/mmu/gene_symbol_ensembl').
+        :param assembly:                      Genome assembly (e.g. 'GRCh38', 'dm6', 'ce6', 'mm10', 'rn6').
         """
         self.filepath = filepath
         self.taxon_id = taxon_id
@@ -69,6 +75,7 @@ class EPDAdapter(Adapter):
         self.chr = chr
         self.start = start
         self.end = end
+        self.assembly = assembly
         self.source = 'EPD'
         self.version = '006'
         self.source_url = _SOURCE_URLS.get(taxon_id, 'https://epd.expasy.org/')
@@ -145,7 +152,10 @@ class EPDAdapter(Adapter):
                 chr = line[EPDAdapter.INDEX['chr']]
                 coord_start = int(line[EPDAdapter.INDEX['coord_start']]) + 1
                 coord_end = int(line[EPDAdapter.INDEX['coord_end']])
-                promoter_id = f"EPD:{build_regulatory_region_id(chr, coord_start, coord_end)}"
+                if self.assembly is not None:
+                    promoter_id = f"EPD:{build_regulatory_region_id(chr, coord_start, coord_end, self.assembly)}"
+                else:
+                    promoter_id = f"EPD:{build_regulatory_region_id(chr, coord_start, coord_end)}"
 
                 if check_genomic_location(self.chr, self.start, self.end, chr, coord_start, coord_end):
                     props = {}
@@ -179,7 +189,10 @@ class EPDAdapter(Adapter):
                 ensembl_gene_id = f"{prefix}:{ensembl_id}"
 
                 if check_genomic_location(self.chr, self.start, self.end, chr, coord_start, coord_end):
-                    promoter_id = f"EPD:{build_regulatory_region_id(chr, coord_start, coord_end)}"
+                    if self.assembly is not None:
+                        promoter_id = f"EPD:{build_regulatory_region_id(chr, coord_start, coord_end, self.assembly)}"
+                    else:
+                        promoter_id = f"EPD:{build_regulatory_region_id(chr, coord_start, coord_end)}"
                     props = {}
                     if self.write_properties and self.add_provenance:
                         props['source'] = self.source

@@ -1,9 +1,12 @@
 from inspect import getfullargspec
 import hashlib
 from math import log10, floor, isinf
-from liftover import get_lifter
+try:
+    from liftover import get_lifter
+except ImportError:
+    get_lifter = None
 
-ALLOWED_ASSEMBLIES = ['GRCh38']
+ALLOWED_ASSEMBLIES = ['GRCh38', 'dm6', 'ce6', 'mm10', 'rn6']
 _lifters = {}
 
 
@@ -13,11 +16,13 @@ def assembly_check(id_builder):
 
         if 'assembly' in argspec.args:
             assembly_index = argspec.args.index('assembly')
-            if assembly_index >= len(args):
-                pass
-            elif args[assembly_index] not in ALLOWED_ASSEMBLIES:
-                raise ValueError('Assembly not supported')
-        return id_builder(*args, *kwargs)
+            if assembly_index < len(args):
+                if args[assembly_index] not in ALLOWED_ASSEMBLIES:
+                    raise ValueError('Assembly not supported')
+            elif 'assembly' in kwargs:
+                if kwargs['assembly'] not in ALLOWED_ASSEMBLIES:
+                    raise ValueError('Assembly not supported')
+        return id_builder(*args, **kwargs)
 
     return wrapper
 
@@ -160,6 +165,9 @@ def convert_genome_reference(chr, pos, from_build='hg19', to_build='hg38'):
     """
     if from_build not in ['hg19', 'hg38'] or to_build not in ['hg19', 'hg38'] or from_build == to_build:
         raise ValueError("Invalid reference build versions. 'from_build' and 'to_build' must be different and one of 'hg19' or 'hg38'.")
+
+    if get_lifter is None:
+        raise ImportError("liftover is required for convert_genome_reference")
 
     lifter_key = f"{from_build}_{to_build}"
 

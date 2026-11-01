@@ -386,33 +386,6 @@ located on chain:
     knowledge_level: "knowledge_assertion"
     agent_type: "manual_agent"
 
-snp to motif association:
-  is_a: association
-  biolink_predicate: "biolink:affects"
-  description: holds between a snp and a HOCOMOCO motif where the snp causes a gain or loss of transcription factor binding affinity at that motif site
-  represented_as: edge
-  input_label: tf_snp
-  output_label: alters_binding
-  source: snp
-  target: motif
-  kgx_properties:
-    subject_category: "biolink:Snv"
-    object_category: "biolink:TranscriptionFactorBindingSite"
-    knowledge_level: "knowledge_assertion"
-    agent_type: "manual_agent"
-  properties:
-    effect: 
-      type: str
-    score: 
-      type: float
-      biolink: has_quantitative_value
-    source: 
-      type: str
-      biolink: primary_knowledge_source
-    source_url: 
-      type: str
-      biolink: source_web_page
-
 activity by contact:
   description: >-
     An association between a variant in a regulatory region and a gene predicted
@@ -437,6 +410,10 @@ activity by contact:
     biological_context:
       type: str
       biolink: has_biological_sequence
+    taxon_id:
+      type: int
+      biolink: taxon
+      range: biolink:OrganismTaxon
 
 enhancer activity by contact:
   description: >-

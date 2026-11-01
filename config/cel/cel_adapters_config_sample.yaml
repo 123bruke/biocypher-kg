@@ -493,6 +493,7 @@ epd_promoter:
       filepath: epd/Ce_EPDnew.bed.gz
       label: promoter
       taxon_id: 6239
+      assembly: ce6
   outdir: epd
   nodes: True
   edges: False
@@ -506,6 +507,7 @@ epd_promoter_regulates_gene:
       label: promoter_gene
       taxon_id: 6239
       type: promoter to gene association
+      assembly: ce6
   outdir: epd
   nodes: False
   edges: True

@@ -79,6 +79,7 @@ epd_promoter:
       label: promoter
       type: promoter
       taxon_id: 10090
+      assembly: mm10
   outdir: epd
   nodes: True
   edges: False
@@ -92,6 +93,7 @@ epd_promoter_regulates_gene:
       label: promoter_gene
       type: promoter_gene
       taxon_id: 10090
+      assembly: mm10
   outdir: epd
   nodes: False
   edges: True

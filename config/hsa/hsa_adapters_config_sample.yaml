@@ -487,7 +487,7 @@ alliance_gene_disease_is_implicated_in:
   nodes: False
   edges: True
 
-alliance_gene_disease_is_marker_for:
+alliance_gene_disease_is_marker_for: 
   adapter:
     module: biocypher_metta.adapters.alliance_gene_disease_adapter
     cls: AllianceGeneDiseaseAdapter
@@ -519,6 +519,7 @@ epd_promoter:
       filepath: epd/Hs_EPDnew.bed.gz
       label: promoter
       taxon_id: 9606
+      assembly: GRCh38
   outdir: epd
   nodes: True
   edges: False
@@ -532,6 +533,7 @@ epd_promoter_regulates_gene:
       label: promoter_gene
       taxon_id: 9606
       type: promoter to gene association
+      assembly: GRCh38
   outdir: epd
   nodes: False
   edges: True
@@ -1857,7 +1859,7 @@ catlas_abc_promoter_to_gene:
 
 motif_diff_tf_snp:
   adapter:
-    module: biocypher_metta.adapters.hsa.motif_diff_adapter
+    module: biocypher_metta.adapters.motif_diff_adapter
     cls: MotifDiffAdapter
     args:
       filepath: motif_diff/_mono_probNorm_average.diff
